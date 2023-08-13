@@ -1,11 +1,11 @@
-import {NextResponse} from "next/server";
-import {auth} from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
 
 export async function PATCH (
     req: Request,
-    { params }: { params: { storeId: string } }
+    { params }: { params: { StoreId: string } }
 ) {
     try {
         const { userId } = auth();
@@ -21,13 +21,13 @@ export async function PATCH (
             return new NextResponse("Name is required", { status: 400 });
         }
 
-        if (!params.storeId) {
-            return new NextResponse("Store id is required", { status: 400 });
+        if (!params.StoreId) {
+            return new NextResponse("Store required", { status: 400 });
         }
 
         const store = await prismadb.store.updateMany({
             where: {
-                id: params.storeId,
+                id: params.StoreId,
                 userId
             },
             data: {
@@ -44,7 +44,7 @@ export async function PATCH (
 
 export async function DELETE (
     req: Request,
-    { params }: { params: { storeId: string } }
+    { params }: { params: { StoreId: string } }
 ) {
     try {
         const { userId } = auth();
@@ -53,17 +53,14 @@ export async function DELETE (
             return new NextResponse("Unauthenticated", { status: 401 });
         }
 
-        if (!params.storeId) {
-            return new NextResponse("Store id is required", { status: 400 });
+        if (!params.StoreId) {
+            return new NextResponse("Store required", { status: 400 });
         }
 
         const store = await prismadb.store.deleteMany({
             where: {
-                id: params.storeId,
+                id: params.StoreId,
                 userId
-            },
-            data: {
-                name
             }
         });
 
